@@ -2,6 +2,7 @@
 
 #include <conf.h>
 #include <kernel.h>
+#include <proc.h>
 #include <q.h>
 
 /*------------------------------------------------------------------------
@@ -21,5 +22,9 @@ int insert(int proc, int head, int key)
 	q[proc].qkey  = key;
 	q[prev].qnext = proc;
 	q[next].qprev = proc;
+	struct pentry *proc1= &proctab[proc];
+	kprintf("\n---------------In Insert------------------");
+	kprintf("\n\nname: %s \nkey:%d, currpid=%d, prev = %d, next = %d \n ", proc1->pname, q[proc].qkey,proc, q[proc].qprev, q[proc].qnext);
+	kprintf("\n---------------End Insert------------------");
 	return(OK);
 }

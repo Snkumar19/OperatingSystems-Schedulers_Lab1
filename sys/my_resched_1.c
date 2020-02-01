@@ -7,6 +7,7 @@
 
 unsigned long currSP;	/* REAL sp of current process */
 extern int ctxsw(int, int, int, int);
+int random = 0;
 /*-----------------------------------------------------------------------
  * resched  --  reschedule processor to highest priority ready process
  *
@@ -24,42 +25,24 @@ int resched()
         int prev;
         int flag =0;
         struct pentry  *ptr=&proctab[currpid];
-	int random = 0;	
-	unsigned int i =0, priority_sum =0;
 
-	/*1. Random number allocation using Process priority sum*/
-	for (i =0; i < NPROC; i++)
-	{
-		if(proctab[i].pprio != 0){
-			priority_sum += proctab[i].pprio;
-		}
-		
-	}
-	 random = rand() % priority_sum;
-	if (currpid != 0){
-       		kprintf("\nPriority Sum = %d", priority_sum);	
-		kprintf("\nInit Randon = %d", random);
-	}
-
-        //random = 30;
-
-	
+        /*kprintf("\n In resched");     */
+        random = 30;
+        /* no switch needed if current process priority higher than next*/
         if (currpid != 0)
-	        kprintf ("\n Resched Called by Process %d \n ", currpid);
+        kprintf ("\n Resched Called by Process with priority: %d \n ", currpid);
         
 
 /*
- *  no switch needed if current process priority higher than next
-        if ( ( (optr= &proctab[currpid])->pstate == PRCURR) &&
+ *         if ( ( (optr= &proctab[currpid])->pstate == PRCURR) &&
  *                    (lastkey(rdytail)<optr->pprio)) {
  *                                    if (currpid != 0)
  *                                                    kprintf("\nNo switch needed\n");
  *                                                                    return(OK);
  *                                                                            }
- */
+ *                                                                            */
 
 
-	/* no switch nedded if random value is less than current process priority)*/
         if ( ( (optr= &proctab[currpid])->pstate == PRCURR) &&
                    (random<optr->pprio)) {
                         if (currpid != 0)
@@ -67,57 +50,49 @@ int resched()
                         return(OK);
         }
 
-	/* no switch if null process is current process and ready queue is empty*/
-	if ((optr->pprio == 0) && (lastkey(rdytail)<optr->pprio))
-                                return(OK);
-
-	/* if random greater than current process priority, get the differnce and get the ID of last value in the queue*/
         if ((random - optr->pprio) >= 0)
-              	random = random - optr->pprio;
+                random = random - optr->pprio;
         prev = q[rdytail].qprev;
-        kprintf("\nPrev0: %d", prev);
-        kprintf("\nRandom0 = %d", random);
+        kprintf("\n\tPrev0: %d\n", prev);
+        kprintf("\nrandom = %d\n", random);
 
-	/* get the prcess which has priority greater than random value generated */
         while((random - q[prev].qkey) >=0 && q[prev].qkey>=0)
- 	{
+ {
                 random = random - q[prev].qkey;
                 prev =q[prev].qprev;
-                kprintf("\nPrev1: %d", prev);
+                kprintf("\n\tPrev1: %d\n", prev);
                 /*flag = 1;*/
 
         }
 
-	/* if process at the head of the queue is picked, get the next value*/
-	if(prev>=NPROC)
-		prev = q[prev].qnext;
-	kprintf("\nPrev2: %d", prev);
-	kprintf("\nRandom1 = %d", random);
-
+if(prev>=NPROC)
+prev = q[prev].qnext;
+kprintf("\n\tPrev2: %d\n", prev);
+kprintf("random = %d", random);
         /* force context switch */
+
         if (optr->pstate == PRCURR) {
                 optr->pstate = PRREADY;
                 if (currpid != 0)
-         		kprintf("\nContext Switch Start\n");
+         kprintf("\nContext Switch Start\n");
                 insert(currpid,rdyhead,optr->pprio);
         }
 
         /* remove highest priority process at end of ready list */
 
-	
-	if (prev>=NPROC)
-		prev = 0;
+if (prev>NPROC)
+	prev = 0;
         nptr = &proctab[ (currpid = dequeue(prev)) ];
         nptr->pstate = PRCURR;          /* mark it currently running    */
-	#ifdef  RTCLOCK
-        	preempt = QUANTUM;              /* reset preemption counter     */
-	#endif
+#ifdef  RTCLOCK
+        preempt = QUANTUM;              /* reset preemption counter     */
+#endif
 
         ctxsw((int)&optr->pesp, (int)optr->pirmask, (int)&nptr->pesp, (int)nptr->pirmask);
 
         /* The OLD process returns here when resumed. */
         if (currpid != 0)
-        	kprintf("\nContext Switch end\n");
+         kprintf("\nContext Switch end\n");
         return OK;
 
 }
