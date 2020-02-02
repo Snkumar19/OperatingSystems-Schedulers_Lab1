@@ -4,6 +4,7 @@
 #include <kernel.h>
 #include <proc.h>
 #include <stdio.h>
+#include<lab1.h>
 
 /*------------------------------------------------------------------------
  *  main  --  user main program
@@ -34,43 +35,34 @@ char c;
 int main()
 {
 	kprintf("\n\nHello World, Xinu lives\n\n");
-	kprintf( " \n In Main now =%d", numproc);
+	//kprintf( " \n In Main now =%d", numproc);
+		setschedclass(RANDOMSCHED);
+		prA = create(proc_a, 2000, 15, "proc A", 1, 'A');
+		prB = create(proc_b, 2000, 30, "proc B", 1, 'B');
+		prC = create(proc_c, 2000, 45, "proc C", 1, 'C');
+		resume(prA);
+		resume(prB);
+		resume(prC);
+		//sleep(10);
+		kill(prA);
+		kill(prB);
+		kill(prC);
 
-	prA = create(proc_a, 2000, 18, "proc A", 1, 'A');
-	kprintf("\nBefore resume\n");
-	resume(prA);
-	kprintf("\n in main after Resume of prA");
-	prB = create(proc_b, 2000, 23, "proc B", 1, 'B');
-	resume(prB);	
-//sleep(10);
-	//kill(prA);
-	//prA = create(prch,2000,15,"proc A",1,'A');
-	//kprintf ("\n Back in Main after Create\n");
-	//kprintf ("\n Back in Main before resume");
-	//resume(prA);
-	//kprintf("\n in main after Resume of prA");
-	//kprintf("\n in main before Resume of prB");
-	//resume(prB = create(prch,2000,25,"proc B",1,'B'));
-	//kprintf("\n in main after Resume of prB");
-	//resume(prC = create(prch,2000,11,"proc C",1,'C'));
-//kprintf("\nTest Result: A = %d, B = %d, C = %d\n", a_cnt, b_cnt, c_cnt);	
+		kprintf("\nTest Result: A = %d, B = %d, C = %d\n", a_cnt, b_cnt, c_cnt);
 return 0;
 }
-
 int proc_a(char c) {
 	int i;
-	kprintf("\n\nStart... %c\n", c);
+	kprintf("Start... %c\n", c);
 	b_cnt = 0;
 	c_cnt = 0;
 
-			
-	
-//while (1) {
+	while (1) {
 		for (i = 0; i < 10000; i++)
-			
+			;
 		a_cnt++;
-	
-	kprintf("\nInside proc_a: %d", a_cnt);
+	}
+	kprintf("a count=%d", a_cnt);
 	return 0;
 }
 
@@ -80,12 +72,26 @@ int proc_b(char c) {
 	a_cnt = 0;
 	c_cnt = 0;
 
-//while (1) {
+	while (1) {
 		for (i = 0; i < 10000; i++)
-			
+			;
 		b_cnt++;
-		
-			
-	
+	}
 	return 0;
 }
+
+int proc_c(char c) {
+	int i;
+	kprintf("Start... %c\n", c);
+	a_cnt = 0;
+	b_cnt = 0;
+
+	while (1) {
+		for (i = 0; i < 10000; i++)
+			;
+		c_cnt++;
+	}
+	return 0;
+}
+
+		
