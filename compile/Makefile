@@ -386,8 +386,12 @@ kprintf.o: ../sys/kprintf.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/tty.h
 kputc.o: ../sys/kputc.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/tty.h
-lab1.o: ../sys/lab1.c /usr/include/stdc-predef.h ../h/lab1.h
+lab1.o: ../sys/lab1.c /usr/include/stdc-predef.h ../h/conf.h \
+ ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/lab1.h
 main.o: ../sys/main.c /usr/include/stdc-predef.h ../h/conf.h \
+ ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/stdio.h \
+ ../h/lab1.h
+main-copy.o: ../sys/main-copy.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/stdio.h \
  ../h/lab1.h
 mark.o: ../sys/mark.c /usr/include/stdc-predef.h ../h/conf.h \
@@ -483,13 +487,13 @@ suspend.o: ../sys/suspend.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/q.h \
  ../h/stdio.h
 test1.o: ../sys/test1.c /usr/include/stdc-predef.h ../h/conf.h \
- ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/q.h
+ ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/q.h ../h/lab1.h
 test2.o: ../sys/test2.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/q.h
 test3.o: ../sys/test3.c /usr/include/stdc-predef.h ../h/conf.h \
- ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/q.h
+ ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/q.h ../h/lab1.h
 test4.o: ../sys/test4.c /usr/include/stdc-predef.h ../h/conf.h \
- ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/q.h
+ ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/q.h ../h/lab1.h
 testmain.o: ../sys/testmain.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/q.h
 unsleep.o: ../sys/unsleep.c /usr/include/stdc-predef.h ../h/conf.h \

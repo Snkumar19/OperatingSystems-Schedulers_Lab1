@@ -1,7 +1,7 @@
 #include <conf.h>
 #include <kernel.h>
 #include <q.h>
-
+#include <lab1.h>
 /* test3.c
  * This test program creates three processes, prA, prB, and prC, at
  * priority 10.  The main process has priority 20.
@@ -17,7 +17,7 @@ main()
 	int i;
 
         kprintf("\n\nTEST3:\n");
-
+	setschedclass(LINUXSCHED);
 	resume(prA = create(prch,2000,10,"proc A",1,'A'));
 	resume(prB = create(prch,2000,10,"proc B",1,'B'));
 	resume(prC = create(prch,2000,10,"proc C",1,'C'));
@@ -38,7 +38,7 @@ char c;
 	int i;
 
 	while(1) {
-		kprintf("%c", c);
+		kprintf("%c\n", c);
 		for (i=0; i< 10000; i++);
 	}
 }

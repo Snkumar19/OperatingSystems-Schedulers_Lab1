@@ -17,6 +17,7 @@ int getschedclass()
 void start_epoch()
 {
 	unsigned int i = 0;
+	//kprintf("\nStart EPOCH \n");
 	for ( i = 0; i < NPROC; i++)
 	{
 		if (proctab[i].pstate != PRFREE)
