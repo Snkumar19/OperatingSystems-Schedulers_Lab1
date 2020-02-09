@@ -115,17 +115,16 @@ int resched()
 		unsigned int highest_goodness_pid=0, start_epoch_flag = 1;
 		struct pentry  *p;
 		
-		if (once) {
+		/*if (once) {
                 	kprintf ("\n Linux Sched \n");
                         once = 0;                                
                  }
+		*/
 
 		optr = &proctab[currpid];
 
 		/*update goodness for current process*/
 		optr->goodness = (optr->goodness - optr->counter) + preempt;
-		if (preempt == 0)
-			optr->goodness = 0;
 		optr->counter = max(preempt, 0);	
 		
 		/*update counter and goodness for null process*/
@@ -136,7 +135,6 @@ int resched()
 		
 		/*update counter and goodness for counter <=0 , Important as this process should not be considered for scheduling*/
 		if(optr->counter <= 0){
-                        optr->counter = 0;
                         optr->goodness = 0;
                 }
 
@@ -163,86 +161,105 @@ int resched()
  		* 1. Start epoch if epoch is not running denoted with epoch start flag
  		* 2. if the current process is NULLPROC
  		* 3. if current process is not nullproc, add current process to RQ & ctxsw to nullproc */	 	
-//		 kprintf("\n 0 --------------------------------------------------------- 0 \n");
-//		 kprintf("\n 0 currpid : , optr->counter is : %d optr->goodness is %d, prempt is %d 0 \n",currpid, optr->counter, optr->goodness, preempt);
+
+		//kprintf("\n 0 --------------------------------------------------------- 0 \n");
+		// kprintf("\n 0 currpid : , optr->counter is : %d optr->goodness is %d, prempt is %d 0 \n",currpid, optr->counter, optr->goodness, preempt);
 		if (highest_goodness <= 0){
 			if (optr->pstate != PRCURR || optr->counter == 0){
-		//		 kprintf("\n Highest goodness 0 - Case 1");
+				//kprintf("\n Highest goodness 0 - Case 1");
 				if (start_epoch_flag){
-		//			kprintf("\n Highest goodness 0 - Case 2");
+					//kprintf("\n Highest goodness 0 - Case 2");
 					start_epoch_flag = 0;
-					start_epoch();
-			
+					start_epoch();	
 					preempt = optr->counter;
 				}
 
 			}
+			
+			/* If null process, set preempt value and return */
 			if (currpid == NULLPROC){
 				//kprintf("\n Highest goodness 0 - Case 3");
 				//kprintf("\n 1 --------------------------------------------------------- 1 \n");
-				preempt = optr->counter;	
+				//preempt = optr->counter;	
 				return (OK);
 			}
+
 			/* if none of the processes are eligible to run */
 			if (optr->pstate == PRCURR){
-		//		kprintf("\n Highest goodness 0 - Case 4");
+				//kprintf("\n Highest goodness 0 - Case 4");
 				optr->pstate = PRREADY;
 	                        insert(currpid,rdyhead,optr->pprio);
 			}
 
 			nptr = &proctab[ (currpid = dequeue(NULLPROC)) ];
 	                nptr->pstate = PRCURR;          /* mark it currently running    */
-		//	kprintf("\n Highest goodness 0 - Case 5");
-		//	kprintf ("\n Case 1 : DQ NULL PROC: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d \n", highest_goodness, 
-		 //	highest_goodness_pid, optr->goodness, currpid);
+			//kprintf("\n Highest goodness 0 - Case 5");
+			//kprintf ("\n Case 1 : DQ NULL PROC: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d \n", highest_goodness, 
+		 	//highest_goodness_pid, optr->goodness, currpid);
 	                #ifdef  RTCLOCK
         	                preempt = QUANTUM;              /* reset preemption counter     */
                		#endif
-		//	 kprintf ("\n Case 1-preempt check : DQ NULL PROC: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d, preempt = %d \n", 
-		//	 	highest_goodness, highest_goodness_pid, optr->goodness, currpid, preempt);
-		//	kprintf("\n 1 --------------------------------------------------------- 2 \n");
+			// kprintf ("\n Case 1-preempt check : DQ NULL PROC: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d, preempt = %d \n", 
+			//highest_goodness, highest_goodness_pid, optr->goodness, currpid, preempt);
+			//kprintf("\n 1 --------------------------------------------------------- 2 \n");
                 	ctxsw((int)&optr->pesp, (int)optr->pirmask, (int)&nptr->pesp, (int)nptr->pirmask);
 
                 	return OK;
 		
 		}
-		/*1. check if current process goodness is > highest goodness - then current process is eligible to run */
-		else if (optr->pstate == PRCURR && optr->goodness > highest_goodness){
-		//	kprintf ("\n If you are current process  : highest goodness is %d and pid is %d \n", highest_goodness, highest_goodness_pid);
-		//	kprintf ("\n If you are PRCURR: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d \n", highest_goodness, 
-		//	 	highest_goodness_pid, optr->goodness, currpid);
-		//	kprintf("\n Preempt is : %d, optr->counter is : %d \n",preempt, optr->counter);
+		/* check if current process goodness is > highest goodness - then current process is eligible to run */
+		else if (highest_goodness < optr->goodness && optr->pstate == PRCURR) {
+				//kprintf ("\n If you are current process  : highest goodness is %d and pid is %d \n", highest_goodness, highest_goodness_pid);
+				//kprintf ("\n If you are PRCURR: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d \n", highest_goodness, 
+				//highest_goodness_pid, optr->goodness, currpid);
+				//kprintf("\n Preempt is : %d, optr->counter is : %d \n",preempt, optr->counter);
 			return(OK);
+		}
 				
-		}
+			
 
-		/*Here we know that the process is not the current process - Context switch*/
-		else if (optr->counter == 0 || optr->goodness < highest_goodness || optr->pstate != PRCURR){
+		/* Context Switch - 
+ 		* 1. When there's a highest goodness process in the RQ whose goodness is greater than current process
+ 		* 2. or if current process' counter is 0, which means a new process can be scheduled
+ 		* 3. or if a blocked process has moved to ready state 
+ 		* */
+		else{
+			if (highest_goodness > optr->goodness || optr->counter == 0 ){
 
-			/* Schedule the process with highest goodness */
-		//	 kprintf ("\n Final Case  : highest goodness is %d and pid is %d \n", highest_goodness, highest_goodness_pid);
-		//	 kprintf ("\n Final Case: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d \n", highest_goodness, highest_goodness_pid, 
-		//	 	optr->goodness, currpid);
-			if (optr->pstate == PRCURR) {
-                        	optr->pstate = PRREADY;
-                        	insert(currpid,rdyhead,optr->pprio);
-                	}
+				//kprintf ("\n Final Case  : highest goodness is %d and pid is %d \n", highest_goodness, highest_goodness_pid);
+				//kprintf ("\n Final Case: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d \n", highest_goodness, highest_goodness_pid, 
+				//optr->goodness, currpid);
+			
+				if (optr->pstate == PRCURR) 
+				{
+                        		optr->pstate = PRREADY;
+                        		insert(currpid,rdyhead,optr->pprio);
+                		}
 
-			nptr = &proctab[currpid = dequeue(highest_goodness_pid)];
-			nptr -> pstate = PRCURR;
-			preempt = nptr->counter;
-		//		kprintf("\n 3 --------------------------------------------------------- 1 \n");
-			ctxsw((int)&optr->pesp, (int)optr->pirmask, (int)&nptr->pesp, (int)nptr->pirmask);
+				nptr = &proctab[currpid = dequeue(highest_goodness_pid)];
+				nptr -> pstate = PRCURR;
+				preempt = nptr->counter;
+				//kprintf("\n 3 --------------------------------------------------------- 1 \n");
+				ctxsw((int)&optr->pesp, (int)optr->pirmask, (int)&nptr->pesp, (int)nptr->pirmask);
 
-                	/* The OLD process returns here when resumed. */
-              		  return OK;
-		}
-		else
-		   return SYSERR;
+                		/* The OLD process returns here when resumed. */
+              		  	return OK;
+			}
+	
+			if(optr->pstate != PRCURR)
+			{
+				nptr = &proctab[currpid = dequeue(highest_goodness_pid)];
+                        	nptr -> pstate = PRCURR;
+                       	 	preempt = nptr->counter;
+                        	//kprintf("\n 3 --------------------------------------------------------- 13 \n");
+                         	ctxsw((int)&optr->pesp, (int)optr->pirmask, (int)&nptr->pesp, (int)nptr->pirmask);
+				return OK;
+			}
+		}	
 	}
 	else{
 		/* no switch needed if current process priority higher than next*/
-//		kprintf ("\n Default Sched \n");
+		//kprintf ("\n Default Sched \n");
 		if ( ( (optr= &proctab[currpid])->pstate == PRCURR) &&
 	   	(lastkey(rdytail)<optr->pprio)) {
 			return(OK);

@@ -42,13 +42,13 @@ int main()
 	// RANDOMSCHED
 		if (s < 2) {
 		setschedclass(RANDOMSCHED);
-		prA = create(proc_a, 2000, 5, "proc A", 1, 'A');
-		prB = create(proc_b, 2000, 10, "proc B", 1, 'B');
-		prC = create(proc_c, 2000, 50, "proc C", 1, 'C');
+		prA = create(proc_a, 2000, 20, "proc A", 1, 'A');
+		prB = create(proc_b, 2000, 20, "proc B", 1, 'B');
+		prC = create(proc_c, 2000, 20, "proc C", 1, 'C');
 		resume(prA);
 		resume(prB);
 		resume(prC);
-		sleep(5);
+		sleep(1);
 		kill(prA);
 		kill(prB);
 		kill(prC);
@@ -60,7 +60,7 @@ int main()
 		setschedclass(LINUXSCHED);
 		resume(prA = create(proc, 2000, 5, "proc A", 1, 'A'));
 		resume(prB = create(proc, 2000, 10, "proc B", 1, 'B'));
-		resume(prC = create(proc, 2000, 20, "proc C", 1, 'C'));
+		resume(prC = create(proc, 2000, 90, "proc C", 1, 'C'));
 
 		while (count++ < LOOP) {
 			kprintf("M");

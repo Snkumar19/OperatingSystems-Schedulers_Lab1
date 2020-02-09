@@ -22,11 +22,10 @@ void start_epoch()
 	{
 		if (proctab[i].pstate != PRFREE)
 		{
-			if (proctab[i].counter == 0 || proctab[i].counter == proctab[i].sched_quantum)
-				proctab[i].sched_quantum = proctab[i].pprio;
+			if (proctab[i].counter == 0)
+				proctab[i].counter = proctab[i].pprio;
 			else
-				proctab[i].sched_quantum = (proctab[i].counter/2) + proctab[i].pprio;
-			proctab[i].counter = proctab[i].sched_quantum;
+				proctab[i].counter = (proctab[i].counter/2) + proctab[i].pprio;
 			proctab[i].goodness = proctab[i].counter + proctab[i].pprio;
 		}
 	}
