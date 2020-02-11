@@ -5,30 +5,31 @@ Random Scheduler -
 
 Advantages - Random scheduler will always give a chance to all processes based on their priority. Even the process with lowest priority is given a chance to execute.
 
-Disadvantages - This scheduling is based on Random number generated which might not give chance to all processes at all times. For example - If the random number genreted is always less than the process with higest priority, other processes will starve.
+Disadvantages - This scheduling is based on Random number generated which might not give fair chance to all processes at all times -  higher priority process will be preempted by lower priority processes. Also, it increases the amount of context switching which is expensive.
+
+
 
 Linux Scheduler -
 
-Advantages - Addresses the problem of starvation by giving all processes a fair chance to execute based on their goodness(which doesnt depend on any random values generated). Within an epoch, all runnable proceses are scheduled based on their goodness.
+Advantages - Addresses the problem of starvation by giving all processes a fair chance to execute based on their goodness(which doesnt depend on any random value generated). Within an epoch, all runnable proceses are scheduled based on their goodness.
 
 Disadvantages - This is goodness based scheduling, where we have to keep track of goodness and counter for every process. Since we have to update both these values while schduling, it adds additional overhead.
 
 
 Round Robin:
 
-Advantages - Simple implementation, which gives highest priority process more chance to execute.
+Advantages - Simple implementation, which gives highest priority process more chance to execute. Also, when there are processes with equal priority, there is no staravtion.
 
-Disadvantages - Leads to starvation, because the lowest priority process doesn't get a chance to execute when there is a higher priority process. 
-
+Disadvantages - Leads to starvation(when processes have differnt priorities), because the lowest priority process doesn't get a chance to execute when there is a higher priority process.
 
 
 2. Describe when each of the schedulers run the NULL process.
 
-Random scheduler - When all user defined processes have finished executing, null process begins its execution. This needss to be handled in the code, where we check if there are no process that are there in the ready queue which can execute, null process has to be scheduled.
+Random scheduler - When all user defined processes have finished executing, null process begins its execution. This needs to be handled in the code, where we check if there are no process that are there in the ready queue which can execute, null process has to be scheduled.
 
-Linux Scheduler - Null process will execute when all runnable processes have used up their quantum within an epoch.
+Linux Scheduler - Null process will execute when all runnable processes have used up their quantum during an epoch.
 
-Xinu Scheduler - Null process runs once all user defined proceses have complted their execution.
+Xinu Scheduler - Null process runs once all user defined proceses have completed their execution.
 
 
 
@@ -38,3 +39,5 @@ Xinu Scheduler - Null process runs once all user defined proceses have complted 
 Priorities that can be set -  20, 30 and 50 (Since our current implementation allows for priorities upto 99) for three processes - P1,P2 & P3 or in a generalized ratio of  2:3:5.
 
 If there are N Processes that can run, if each process has a time allocation T(i)% where i is the process number. Assuming that the sum of all time allocations would be 100%, the ratio  of priorites for process P(1):P(2)....:P(n) = T(1):T(2):......:T(n).  
+
+T(i) = (P(i)/(P1 + P2 .... Pn)) * 100

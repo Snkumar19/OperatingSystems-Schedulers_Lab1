@@ -22,7 +22,7 @@ main()
 		kprintf("%c", 'D');
 		for (i=0; i< 10000; i++);
 	}
-	kprintf("\n");
+	//kprintf("\n");
 }
 
 prch(c)
