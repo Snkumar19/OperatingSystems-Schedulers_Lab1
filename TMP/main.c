@@ -48,7 +48,7 @@ int main()
 		resume(prA);
 		resume(prB);
 		resume(prC);
-		sleep(1);
+		sleep(10);
 		kill(prA);
 		kill(prB);
 		kill(prC);
@@ -59,7 +59,7 @@ int main()
 	else {
 		setschedclass(LINUXSCHED);
 		resume(prA = create(proc, 2000, 5, "proc A", 1, 'A'));
-		resume(prB = create(proc, 2000, 10, "proc B", 1, 'B'));
+		resume(prB = create(proc, 2000, 50, "proc B", 1, 'B'));
 		resume(prC = create(proc, 2000, 90, "proc C", 1, 'C'));
 
 		while (count++ < LOOP) {

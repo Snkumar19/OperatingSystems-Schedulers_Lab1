@@ -148,8 +148,9 @@ int resched()
 
 		 prev = q[rdytail].qprev;                // Last Entity before Tail of ReadyQueue
 
+		/* Also handles the case when all processes have same priority */
                  while (prev < NPROC) {
-                        if(proctab[prev].goodness >= highest_goodness){
+                        if(proctab[prev].goodness > highest_goodness){
                         	 highest_goodness = proctab[prev].goodness;
 				highest_goodness_pid = prev;
 			}
@@ -164,7 +165,7 @@ int resched()
 		 * */
 
 		/* if highest goodness is 0:
- 		* 1. Start epoch if epoch is not running denoted with epoch start flag
+ 		* 1. Start epoch if epoch is not running
  		* 2. if the current process is NULLPROC
  		* 3. if current process is not nullproc, add current process to RQ & ctxsw to nullproc */	 	
 
@@ -177,12 +178,11 @@ int resched()
 				//kprintf("\n Highest goodness 0 - Case 2");
 				//start_epoch_flag = 0;
 				start_epoch();	
-				preempt = optr->counter;
 				//}
 
 			}
 			
-			/* If null process, set preempt value and return */
+			/* If null process,  return */
 			if (currpid == 0){
 				//kprintf("\n Highest goodness 0 - Case 3");
 				//kprintf("\n 1 --------------------------------------------------------- 1 \n");
