@@ -391,9 +391,6 @@ lab1.o: ../sys/lab1.c /usr/include/stdc-predef.h ../h/conf.h \
 main.o: ../sys/main.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/stdio.h \
  ../h/lab1.h
-main-copy.o: ../sys/main-copy.c /usr/include/stdc-predef.h ../h/conf.h \
- ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/stdio.h \
- ../h/lab1.h
 mark.o: ../sys/mark.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/mark.h
 mkpool.o: ../sys/mkpool.c /usr/include/stdc-predef.h ../h/conf.h \
@@ -428,9 +425,6 @@ recvtim.o: ../sys/recvtim.c /usr/include/stdc-predef.h ../h/conf.h \
 resched.o: ../sys/resched.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/q.h \
  ../h/lab1.h
-resched-copy.o: ../sys/resched-copy.c /usr/include/stdc-predef.h \
- ../h/conf.h ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h \
- ../h/q.h ../h/lab1.h
 resume.o: ../sys/resume.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/stdio.h
 scount.o: ../sys/scount.c /usr/include/stdc-predef.h ../h/conf.h \
@@ -487,7 +481,8 @@ test3.o: ../sys/test3.c /usr/include/stdc-predef.h ../h/conf.h \
 test4.o: ../sys/test4.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/q.h ../h/lab1.h
 testmain.o: ../sys/testmain.c /usr/include/stdc-predef.h ../h/conf.h \
- ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/q.h
+ ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/stdio.h \
+ ../h/lab1.h
 unsleep.o: ../sys/unsleep.c /usr/include/stdc-predef.h ../h/conf.h \
  ../h/kernel.h ../h/systypes.h ../h/mem.h ../h/proc.h ../h/q.h \
  ../h/sleep.h ../h/stdio.h

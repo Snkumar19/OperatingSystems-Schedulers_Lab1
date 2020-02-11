@@ -195,15 +195,32 @@ int resched()
 				optr->pstate = PRREADY;
 	                        insert(currpid,rdyhead,optr->pprio);
 			}
+			/* Now that all values have been reinitialized and current proc is not NULL
+ 			 * schedule process with highest goodness, if highest goodness is zero schedule NULL */
+			highest_goodness = 0;
+			highest_goodness_pid = 0;
+			prev = q[rdytail].qprev;                // Last Entity before Tail of ReadyQueue
+			while (prev < NPROC) {
+                        	if(proctab[prev].goodness > highest_goodness){
+                                	highest_goodness = proctab[prev].goodness;
+                               		 highest_goodness_pid = prev;
+                        	}
+                        	 prev =  q[prev].qprev;
+                	} 	
 
-			nptr = &proctab[ (currpid = dequeue(NULLPROC)) ];
-	                nptr->pstate = PRCURR;          /* mark it currently running    */
+			if (highest_goodness == 0){
+				nptr = &proctab[ (currpid = dequeue(NULLPROC)) ];
+				preempt = QUANTUM; 
+			}
+			else{
+				nptr = &proctab[ (currpid = dequeue(highest_goodness_pid)) ];
+	                	preempt = nptr->counter;
+
+			}
+			nptr->pstate = PRCURR;          /* mark it currently running    */
 			//kprintf("\n Highest goodness 0 - Case 5");
 			//kprintf ("\n Case 1 : DQ NULL PROC: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d \n", highest_goodness, 
 		 	//highest_goodness_pid, optr->goodness, currpid);
-	                #ifdef  RTCLOCK
-        	                preempt = QUANTUM;              /* reset preemption counter     */
-               		#endif
 			// kprintf ("\n Case 1-preempt check : DQ NULL PROC: highest goodness is %d and highest_pid is %d, optr-goodness is %d, and currpid is %d, preempt = %d \n", 
 			//highest_goodness, highest_goodness_pid, optr->goodness, currpid, preempt);
 			//kprintf("\n 1 --------------------------------------------------------- 2 \n");
