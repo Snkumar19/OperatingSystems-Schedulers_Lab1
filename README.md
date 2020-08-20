@@ -1,4 +1,4 @@
-# csc501-lab1
+# Schedulers_Lab1
 
 1. Objective
 The objectives of this lab are to get familiar with the concepts of process management like process priorities, scheduling and context switching.
@@ -65,19 +65,4 @@ BBBMMMBMMAMMMAMMMMMAMMMAMMMAMMMMMMAMMAMM
 MMMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
  
 
-4. Additional Questions
-Write your answers to the following questions in a file named Lab1Answers.txt (in simple text). Please place this file in the sys/ directory and turn it in, along with the above programming assignment.
 
-What are the advantages and disadvantages of each of the two scheduling policies? Also, give the advantages and disadvantages of the round robin scheduling policy originally implemented in Xinu.
-Describe when each of the schedulers run the NULL process.
-Assume that there are three processes P1, P2, P3 that will run forever without blocking. We want to allocate the following CPU times to each of them: 20% to P1, 30% to P2, and 50% to P3. Which priorities do we need to set to P1, P2, and P3 to accomplish this if we want to use the Random scheduler? Assume that those processes are the only ones running in the machine. Could you give a generalization of your result to n processes? Explain.
-Turn-in Instructions
-Electronic turn-in instructions:
-
-go to the csc501-lab1/compile directory and do make clean.
-go to the directory of which your csc501-lab1 directory is a subdirectory (NOTE: please do not rename csc501-lab1, or any of its subdirectories.)e.g., if /home/uid/csc501-lab1 is your directory structure, goto /home/uid/
-create a subdirectory TMP (under the directory csc501-lab1) and copy all the files you have modified/written, both .c files and .h files into the directory.
-compress the csc501-lab1 directory into a tgz file and submit on Moodle PA1. Please only upload one tgz file. tar czf csc501-lab1.tgz csc501-lab1
-You can write code in main.c to test your procedures, but please note that when we test your programs we will replace the main.c file! Therefore, do not put any functionality in the main.c file.
-
-Also, ALL debugging output MUST be turned off before you submit your code.
